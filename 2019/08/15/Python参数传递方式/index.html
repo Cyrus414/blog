@@ -15,7 +15,7 @@
     <meta name="author" content="John Doe">
     <meta name="keywords" content>
     <meta name="referrer" content="no-referrer">
-    <title>我的第一篇博客 - Cyrus Blog</title>
+    <title>Python 参数传递方式 - Cyrus Blog</title>
     <link rel="stylesheet" href="/lib/font-awesome/css/all.min.css?v=5.7.2">
     <link rel="stylesheet" href="/lib/mdbootstrap/css/bootstrap.min.css?v=4.3.1">
     <link rel="stylesheet" href="/lib/mdbootstrap/css/mdb.min.css?v=4.8.7">
@@ -83,7 +83,7 @@
                     </span>
                     
                         <br>
-                        <p>Saturday, August 10th 2019, 4:05 pm</p>
+                        <p>Thursday, August 15th 2019, 11:22 pm</p>
                     
                 </div>
             </div>
@@ -104,15 +104,122 @@
             <div class="container nopadding-md">
                 <div class="py-5 z-depth-3 board">
                     <div class="post-content markdown-body m-auto">
-                        <p>我是谁我在哪我要干嘛</p>
+                        <p>Python 参数传递方式</p>
 <a id="more"></a>
 
-<h2 id="我是谁"><a href="#我是谁" class="headerlink" title="我是谁"></a>我是谁</h2><p>普普通通小码农，从事大数据相关行业。平时喜欢倒腾新东西，拍照拍视频听歌看电影，偶尔研究研究技术。</p>
-<h2 id="我在哪"><a href="#我在哪" class="headerlink" title="我在哪"></a>我在哪</h2><p>地球哇，宽带还没通到火星呢，只能先在地球开博客咯。</p>
+<h2 id="位置传递"><a href="#位置传递" class="headerlink" title="位置传递"></a>位置传递</h2><p>顾名思义，就是通过对应位置传递参数，传入参数需要考虑传入顺序</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, p2, p3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn(1, 2, 3)
+1 2 3
+&gt;&gt;&gt; fn(3, 2, 1)
+3 2 1</code></pre><h2 id="关键字传递"><a href="#关键字传递" class="headerlink" title="关键字传递"></a>关键字传递</h2><p>关键字传递可以通过参数名来指定传入参数，不用像位置传递一样严格按参数定义顺序传入</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, p2, p3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn(p1=1, p2=2, p3=3)
+1 2 3
+&gt;&gt;&gt; fn(p3=3, p2=2, p1=1)
+1 2 3</code></pre><p>关键字传递可以与位置传递混用，需要注意的是位置传递需要在关键字传递之前使用</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, p2, p3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn(1, 2, p3=3)
+1 2 3
+&gt;&gt;&gt; fn(1, p3=3, p2=2)
+1 2 3</code></pre><h2 id="参数默认值-缺省值"><a href="#参数默认值-缺省值" class="headerlink" title="参数默认值(缺省值)"></a>参数默认值(缺省值)</h2><p>在定义函数时可以将变动很少或者最常用的参数定义默认值，这样调用函数时不传递对应参数即使用默认值。需要注意的时参数默认值一定要放在参数列表的末尾。</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, p2, p3=3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn(1, 2)
+1 2 3
+&gt;&gt;&gt; fn(1, 2, 4)
+1 2 4</code></pre><p>当定义的函数存在多个参数默认值时尽量使用关键字传递以保证参宿传递的正确性</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, p2=2, p3=3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn(1, 2, 3)
+1 2 3
+&gt;&gt;&gt; fn(1, 2)
+1 2 3
+&gt;&gt;&gt; fn(1, p3=2)
+1 2 2</code></pre><h2 id="包裹传递"><a href="#包裹传递" class="headerlink" title="包裹传递"></a>包裹传递</h2><p>很多时候我们可能不太确定最终传入的参数个数，这时可以使用包裹传递(也可以理解为可变参数)来帮助我们完成任务。</p>
+<ul>
+<li>定义函数时在形参前面加上<code>*</code>代表包裹位置参数</li>
+</ul>
+<pre><code>&gt;&gt;&gt; def fn(*p):
+...     print(p)
+... 
+&gt;&gt;&gt; fn(1, 2, 3)
+(1, 2, 3)</code></pre><p>可以看到传入的参数与被自动封装成了一个元组。当然我们也可以和位置混用。</p>
+<pre><code>&gt;&gt;&gt; def fn(p1, *p):
+...     print(p1, p)
+... 
+&gt;&gt;&gt; fn(1, 2)
+1 (2,)
+&gt;&gt;&gt; fn(1, 2, 3, 4)
+1 (2, 3, 4)</code></pre><p>个人建议如果和位置传递混用的话将位置传递的参数放在前面，当然放在后面也没有问题，但是调用的时候就一定要使用关键字传递了。</p>
+<pre><code>&gt;&gt;&gt; def fn(*p, p1):
+...     print(p, p1)
+... 
+&gt;&gt;&gt; fn(1, 2, 3, 4)
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+TypeError: fn() missing 1 required keyword-only argument: &#39;p1&#39;
+&gt;&gt;&gt; fn(1, 2, 3, p1=4)
+(1, 2, 3) 4</code></pre><p>这样做看着是不是有点蠢， 所以还是把包裹放到后面去吧。</p>
+<ul>
+<li>定义函数时在形参前面加上<code>**</code>代表包裹关键字参数</li>
+</ul>
+<pre><code>&gt;&gt;&gt; def fn(**p):
+...     print(p)
+... 
+&gt;&gt;&gt; fn(a=1, b=2, c=3)
+{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</code></pre><p>可以看到这时传入的关键字参数被自动封装成了一个字典</p>
+<h2 id="解包裹"><a href="#解包裹" class="headerlink" title="解包裹"></a>解包裹</h2><p>说到包裹传递呢就不得不说一下解包裹，简单的我们可以将解包裹理解为是包裹的一个逆向操作。</p>
+<ul>
+<li>在元组或列表前面加上<code>*</code>代表解包裹</li>
+</ul>
+<pre><code>&gt;&gt;&gt; def fn1(p1, p2, p3):
+...     print(p1, p2, p3)
+... 
+&gt;&gt;&gt; fn1(1, 2, 3)
+1 2 3</code></pre><pre><code>&gt;&gt;&gt; def fn2(*p):
+...     print(p)
+... 
+&gt;&gt;&gt; fn2(1, 2, 3)
+(1, 2, 3)</code></pre><pre><code>&gt;&gt;&gt; def fn3(*p):
+...     print(*p)
+... 
+&gt;&gt;&gt; fn3(1, 2, 3)
+1 2 3</code></pre><p>fn1和fn2我们已经在前面的位置传递和包裹位置传递中演示过效果了，在调用fn2时会收集所以传入的参数封装为一个元组，我们看到fn3的函数定义和fn2是一样的，但是fn3的运行结果却是和fn1一样，导致这样的结果关键点在<code>*p</code>上，在列表或元组前加上<code>*</code>会将列表或元组中的各个元素展开。通过fn2我们可以知道参数<code>p</code>已经自动被封装成了一个元组，而我们在打印<code>p</code>的时候在前面加上了<code>*</code>进行解包裹，从而达到了与fn1一样的效果。我们再来举个例子理解一下解包裹。</p>
+<pre><code>&gt;&gt;&gt; a=[1, 2, 3, 4]
+&gt;&gt;&gt; print(*a)
+1 2 3 4
+&gt;&gt;&gt; b=(1, 2, 3, 4)
+&gt;&gt;&gt; print(*b)
+1 2 3 4</code></pre><ul>
+<li>在字典前面加上<code>**</code>代表解包裹</li>
+</ul>
+<pre><code>&gt;&gt;&gt; def fn(**p):
+...     print(p)
+... 
+&gt;&gt;&gt; d = {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}
+&gt;&gt;&gt; fn(**d)
+{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</code></pre><p>来解释一下，<code>d</code>是我们定义的一个字典，当把<code>d</code>传入fn的时候我们在前面加了<code>**</code>做了一次解包裹，这样就等效的执行了<code>fn(a=1, b=2, c=3)</code>，从而得到了我们介绍关键字包裹传递时用的例子一样的效果。</p>
+<ul>
+<li>一个解包裹的小应用</li>
+</ul>
+<pre><code>&gt;&gt;&gt; x = {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}
+&gt;&gt;&gt; y = {&#39;d&#39;: 4, &#39;e&#39;: 5, &#39;f&#39;: 6}
+&gt;&gt;&gt; z = {**x, **y}
+&gt;&gt;&gt; print(z)
+{&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3, &#39;d&#39;: 4, &#39;e&#39;: 5, &#39;f&#39;: 6}</code></pre><p>通过解包裹操作合并了两个字典，是不是很方便呢。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>我们在定义函数的时候可以将上述讲到的几种传递方式混合使用，但是最好遵循一个基本原则一面带来不必要的麻烦。规则是按照 “位置，关键字，包裹位置，包裹关键字”的顺序。</p>
 <blockquote>
-<p>明天台风登陆，傍晚居然看到了彩虹，顺手拍了两张嘿嘿<br><img src="https://wx1.sinaimg.cn/mw1024/a0077885ly1g5ubjmv3ltj24tc37kqv7.jpg" alt="彩虹"><br><img src="https://wx2.sinaimg.cn/mw1024/a0077885ly1g5ubjoenk5j24tc37ke84.jpg" alt="夕阳"></p>
+<p>如果发现笔者有表述不清或者错误的问题欢迎邮件提醒修改或删帖</p>
 </blockquote>
-<h2 id="我要干嘛"><a href="#我要干嘛" class="headerlink" title="我要干嘛"></a>我要干嘛</h2><p>虽然偶尔会研究研究技术，但是记性比较差，也不太爱做记录，所以浑浑噩噩这么多年也没啥长进。开博客呢就是为了督促自己勤学习多记录，多思考多总结，毕竟人生苦短要多学习嘛。</p>
 
                         <hr>
                         <div>
@@ -216,7 +323,7 @@
         var typed = new Typed('#subtitle', {
           strings: [
             '  ',
-            "我的第一篇博客&nbsp;",
+            "Python 参数传递方式&nbsp;",
         ],
         cursorChar: "_",
         typeSpeed: 50,
